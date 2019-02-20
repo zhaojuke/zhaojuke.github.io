@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>webpack 性能调优与 Gzip 原理 | Hexo</title>
+  <title>webpack 性能调优与 Gzip 原理 | Dafei</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="我们从输入 URL 到显示页面这个过程中，涉及到网络层面的，有三个主要过程：  DNS 解析  TCP 连接  HTTP 请求/响应  对于 DNS 解析和 TCP 连接两个步骤，我们前端可以做的努力非常有限。相比之下，HTTP 连接这一层面的优化才是我们网络优化的核心。因此我们开门见山，抓主要矛盾，直接从 HTTP 开始讲起。 HTTP 优化有两个大的方向:  减少请求次数 减少单次请求所花费的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="webpack 性能调优与 Gzip 原理">
 <meta property="og:url" content="http://yoursite.com/2019/02/20/webpack 性能调优与 Gzip 原理/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Dafei">
 <meta property="og:description" content="我们从输入 URL 到显示页面这个过程中，涉及到网络层面的，有三个主要过程：  DNS 解析  TCP 连接  HTTP 请求/响应  对于 DNS 解析和 TCP 连接两个步骤，我们前端可以做的努力非常有限。相比之下，HTTP 连接这一层面的优化才是我们网络优化的核心。因此我们开门见山，抓主要矛盾，直接从 HTTP 开始讲起。 HTTP 优化有两个大的方向:  减少请求次数 减少单次请求所花费的">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-02-20T07:19:39.905Z">
+<meta property="og:updated_time" content="2019-02-20T09:14:36.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack 性能调优与 Gzip 原理">
 <meta name="twitter:description" content="我们从输入 URL 到显示页面这个过程中，涉及到网络层面的，有三个主要过程：  DNS 解析  TCP 连接  HTTP 请求/响应  对于 DNS 解析和 TCP 连接两个步骤，我们前端可以做的努力非常有限。相比之下，HTTP 连接这一层面的优化才是我们网络优化的核心。因此我们开门见山，抓主要矛盾，直接从 HTTP 开始讲起。 HTTP 优化有两个大的方向:  减少请求次数 减少单次请求所花费的">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Dafei" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -189,10 +189,12 @@
 <li>webpack 的构建过程太花时间</li>
 <li>webpack 打包的结果体积太大</li>
 </ul>
-<h4 id="webpack-优化方案"><a href="#webpack-优化方案" class="headerlink" title="webpack 优化方案"></a>webpack 优化方案</h4><hr>
-<p>#####构建过程提速策略</p>
-<h5 id="不要让-loader-做太多事情——以-babel-loader-为例"><a href="#不要让-loader-做太多事情——以-babel-loader-为例" class="headerlink" title="不要让 loader 做太多事情——以 babel-loader 为例"></a>不要让 loader 做太多事情——以 babel-loader 为例</h5><p>babel-loader 无疑是强大的，但它也是慢的。<br>最常见的优化方式是，用 include 或 exclude 来帮我们避免不必要的转译，比如 webpack 官方在介绍 babel-loader 时给出的示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">module: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: /\.js$/,</span><br><span class="line">      exclude: /(node_modules|bower_components)/,</span><br><span class="line">      use: &#123;</span><br><span class="line">        loader: &apos;babel-loader&apos;,</span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [&apos;@babel/preset-env&apos;]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
+<h4 id="webpack-优化方案"><a href="#webpack-优化方案" class="headerlink" title="webpack 优化方案"></a>webpack 优化方案</h4><h5 id="构建过程提速策略"><a href="#构建过程提速策略" class="headerlink" title="构建过程提速策略"></a>构建过程提速策略</h5><h5 id="不要让-loader-做太多事情——以-babel-loader-为例"><a href="#不要让-loader-做太多事情——以-babel-loader-为例" class="headerlink" title="不要让 loader 做太多事情——以 babel-loader 为例"></a>不要让 loader 做太多事情——以 babel-loader 为例</h5><p>babel-loader 无疑是强大的，但它也是慢的。<br>最常见的优化方式是，用 include 或 exclude 来帮我们避免不必要的转译，比如 webpack 官方在介绍 babel-loader 时给出的示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">      exclude: <span class="regexp">/(node_modules|bower_components)/</span>,</span><br><span class="line">      use: &#123;</span><br><span class="line">        loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [<span class="string">'@babel/preset-env'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这段代码帮我们规避了对庞大的 node_modules 文件夹或者 bower_components 文件夹的处理。但通过限定文件范围带来的性能提升是有限的。除此之外，如果我们选择开启缓存将转译结果缓存至文件系统，则至少可以将 babel-loader 的工作效率提升两倍。要做到这点，我们只需要为 loader 增加相应的参数设定：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loader: <span class="string">'babel-loader?cacheDirectory=true'</span></span><br></pre></td></tr></table></figure>
+<p>以上都是在讨论针对 loader 的配置，但我们的优化范围不止是 loader 们。</p>
+<p>举个🌰，尽管我们可以在 loader 配置时通过写入 exclude 去避免 babel-loader 对不必要的文件的处理，但是考虑到这个规则仅作用于这个 loader，像一些类似 UglifyJsPlugin 的 webpack 插件在工作时依然会被这些庞大的第三方库拖累，webpack 构建速度依然会因此大打折扣。所以针对这些庞大的第三方库，我们还需要做一些额外的努力。</p>
+<h5 id="不要放过第三方库"><a href="#不要放过第三方库" class="headerlink" title="不要放过第三方库"></a>不要放过第三方库</h5>
       
 
       
