@@ -152,6 +152,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-图片优化——质量与性能的博弈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/21/图片优化——质量与性能的博弈/">图片优化——质量与性能的博弈</a>
+    </h1>
+  
+
+        
+        <a href="/2019/02/21/图片优化——质量与性能的博弈/" class="archive-article-date">
+  	<time datetime="2019-02-21T11:07:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>《高性能网站建设指南》的作者 Steve Souders 曾在 2013 年的一篇 博客 中提到：</p>
+<blockquote>
+<p>我的大部分性能优化工作都集中在 JavaScript 和 CSS 上，从早期的 Move Scripts to the Bottom 和 Put Stylesheets     at the Top 规则。为了强调这些规则的重要性，我甚至说过，“JS 和 CSS 是页面上最重要的部分”。<br>  几个月后，我意识到这是错误的。图片才是页面上最重要的部分。<br>  我关注 JS 和 CSS 的重点也是如何能够更快地下载图片。图片是用户可以直观看到的。他们并不会关注 JS 和 CSS。确实，JS 和 CSS 会影响图片内容的展示，尤其是会影响图片的展示方式（比如图片轮播，CSS 背景图和媒体查询）。但是我认为 JS 和 CSS 只是展示图片的方式。在页面加载的过程中，应当先让图片和文字先展示，而不是试图保证 JS 和 CSS 更快下载完成。</p>
+</blockquote>
+<p>  这段话可谓字字珠玑。此外，雅虎军规和 Google 官方的最佳实践也都将图片优化列为前端性能优化必不可少的环节——图片优化的优先级可见一斑。</p>
+<p>就图片这块来说，与其说我们是在做“优化”，不如说我们是在做“权衡”。因为我们要做的事情，就是去压缩图片的体积（或者一开始就选取体积较小的图片格式）。但这个优化操作，是以牺牲一部分成像质量为代价的。因此我们的主要任务，是尽可能地去寻求一个质量与性能之间的平衡点。</p>
+<p><strong>不同业务场景下的图片方案选型</strong></p>
+<p>时下应用较为广泛的 Web 图片格式有 JPEG/JPG、PNG、WebP、Base64、SVG 等，这些格式都是很有故事的，值得我们好好研究一把。此外，老生常谈的雪碧图（CSS Sprites）至今也仍在一线的前端应用中发光发热，我们也会有所提及。</p>
+<p>不谈业务场景的选型都是耍流氓。下面我们就结合具体的业务场景，一起来解开图片选型的神秘面纱！</p>
+<p><strong>前置知识：二进制位数与色彩的关系</strong><br>在计算机中，像素用二进制数来表示。不同的图片格式中像素与二进制位数之间的对应关系是不同的。一个像素对应的二进制位数越多，它可以表示的颜色种类就越多，成像效果也就越细腻，文件体积相应也会越大。</p>
+<p>一个二进制位表示两种颜色（0|1 对应黑|白），如果一种图片格式对应的二进制位数有 n 个，那么它就可以呈现 2^n 种颜色。</p>
+<p><strong>JPEG/JPG</strong><br>关键字：有损压缩、体积小、加载快、不支持透明</p>
+<p><strong>PG 的优点</strong><br>JPG 最大的特点是有损压缩。这种高效的压缩算法使它成为了一种非常轻巧的图片格式。另一方面，即使被称为“有损”压缩，JPG的压缩方式仍然是一种高质量的压缩方式：当我们把图片体积压缩至原有体积的 50% 以下时，JPG 仍然可以保持住 60% 的品质。此外，JPG 格式以 24 位存储单个图，可以呈现多达 1600 万种颜色，足以应对大多数场景下对色彩的要求，这一点决定了它压缩前后的质量损耗并不容易被我们人类的肉眼所察觉——前提是你用对了业务场景。</p>
+<p><strong>使用场景</strong><br>JPG 适用于呈现色彩丰富的图片，在我们日常开发中，JPG 图片经常作为大的背景图、轮播图或 Banner 图出现。</p>
+<p>两大电商网站对大图的处理，是 JPG 图片应用场景的最佳写照：</p>
+<p>打开淘宝首页，我们可以发现页面中最醒目、最庞大的图片，一定是以 .jpg 为后缀的：</p>
+<p><img src="/2019/02/21/图片优化——质量与性能的博弈/165d8aaddff6b9bb.png" alt="165d8aaddff6b9bb.png"><br>京东首页也不例外：<br><img src="/2019/02/21/图片优化——质量与性能的博弈/165d8b82ad50c6a4.png" alt="165d8b82ad50c6a4.png"><br>使用 JPG 呈现大图，既可以保住图片的质量，又不会带来令人头疼的图片体积，是当下比较推崇的一种方案。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/02/21/图片优化——质量与性能的博弈/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-webpack 性能调优与 Gzip 原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -183,16 +262,93 @@
 <li>减少单次请求所花费的时间</li>
 </ol>
 <p>这两个优化点直直地指向了我们日常开发中非常常见的操作——资源的压缩与合并。没错，这就是我们每天用构建工具在做的事情。而时下最主流的构建工具无疑是 webpack。</p>
-<h4 id="webpack-的性能瓶颈"><a href="#webpack-的性能瓶颈" class="headerlink" title="webpack 的性能瓶颈"></a>webpack 的性能瓶颈</h4><ul>
+<p><strong>webpack 的性能瓶颈</strong></p>
+<ul>
 <li>webpack 的构建过程太花时间</li>
 <li>webpack 打包的结果体积太大</li>
 </ul>
-<h4 id="webpack-优化方案"><a href="#webpack-优化方案" class="headerlink" title="webpack 优化方案"></a>webpack 优化方案</h4><h5 id="构建过程提速策略"><a href="#构建过程提速策略" class="headerlink" title="构建过程提速策略"></a>构建过程提速策略</h5><h5 id="不要让-loader-做太多事情——以-babel-loader-为例"><a href="#不要让-loader-做太多事情——以-babel-loader-为例" class="headerlink" title="不要让 loader 做太多事情——以 babel-loader 为例"></a>不要让 loader 做太多事情——以 babel-loader 为例</h5><p>babel-loader 无疑是强大的，但它也是慢的。<br>最常见的优化方式是，用 include 或 exclude 来帮我们避免不必要的转译，比如 webpack 官方在介绍 babel-loader 时给出的示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">      exclude: <span class="regexp">/(node_modules|bower_components)/</span>,</span><br><span class="line">      use: &#123;</span><br><span class="line">        loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [<span class="string">'@babel/preset-env'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>webpack 优化方案</strong><br><strong>构建过程提速策略</strong><br><strong>不要让 loader 做太多事情——以 babel-loader 为例</strong><br>babel-loader 无疑是强大的，但它也是慢的。<br>最常见的优化方式是，用 include 或 exclude 来帮我们避免不必要的转译，比如 webpack 官方在介绍 babel-loader 时给出的示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">      exclude: <span class="regexp">/(node_modules|bower_components)/</span>,</span><br><span class="line">      use: &#123;</span><br><span class="line">        loader: <span class="string">'babel-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [<span class="string">'@babel/preset-env'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这段代码帮我们规避了对庞大的 node_modules 文件夹或者 bower_components 文件夹的处理。但通过限定文件范围带来的性能提升是有限的。除此之外，如果我们选择开启缓存将转译结果缓存至文件系统，则至少可以将 babel-loader 的工作效率提升两倍。要做到这点，我们只需要为 loader 增加相应的参数设定：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loader: <span class="string">'babel-loader?cacheDirectory=true'</span></span><br></pre></td></tr></table></figure>
 <p>以上都是在讨论针对 loader 的配置，但我们的优化范围不止是 loader 们。</p>
 <p>举个🌰，尽管我们可以在 loader 配置时通过写入 exclude 去避免 babel-loader 对不必要的文件的处理，但是考虑到这个规则仅作用于这个 loader，像一些类似 UglifyJsPlugin 的 webpack 插件在工作时依然会被这些庞大的第三方库拖累，webpack 构建速度依然会因此大打折扣。所以针对这些庞大的第三方库，我们还需要做一些额外的努力。</p>
-<h5 id="不要放过第三方库"><a href="#不要放过第三方库" class="headerlink" title="不要放过第三方库"></a>不要放过第三方库</h5>
+<p><strong>不要放过第三方库</strong><br>第三方库以 node_modules 为代表，它们庞大得可怕，却又不可或缺。</p>
+<p>处理第三方库的姿势有很多，其中，Externals 不够聪明，一些情况下会引发重复打包的问题；而 CommonsChunkPlugin 每次构建时都会重新构建一次 vendor；出于对效率的考虑，我们这里为大家推荐 DllPlugin。</p>
+<p>DllPlugin 是基于 Windows 动态链接库（dll）的思想被创作出来的。这个插件会把第三方库单独打包到一个文件中，这个文件就是一个单纯的依赖库。<strong>这个依赖库不会跟着你的业务代码一起被重新打包，只有当依赖自身发生版本变化时才会重新打包</strong>。</p>
+<p>用 DllPlugin 处理文件，要分两步走：</p>
+<ul>
+<li>基于 dll 专属的配置文件，打包 dll 库</li>
+<li>基于 webpack.config.js 文件，打包业务代码<br>以一个基于 React 的简单项目为例，我们的 dll 的配置文件可以编写如下：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    entry: &#123;</span><br><span class="line">      <span class="comment">// 依赖的库数组</span></span><br><span class="line">      vendor: [</span><br><span class="line">        <span class="string">'prop-types'</span>,</span><br><span class="line">        <span class="string">'babel-polyfill'</span>,</span><br><span class="line">        <span class="string">'react'</span>,</span><br><span class="line">        <span class="string">'react-dom'</span>,</span><br><span class="line">        <span class="string">'react-router-dom'</span>,</span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    output: &#123;</span><br><span class="line">      path: path.join(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">      filename: <span class="string">'[name].js'</span>,</span><br><span class="line">      library: <span class="string">'[name]_[hash]'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">      <span class="keyword">new</span> webpack.DllPlugin(&#123;</span><br><span class="line">        <span class="comment">// DllPlugin的name属性需要和libary保持一致</span></span><br><span class="line">        name: <span class="string">'[name]_[hash]'</span>,</span><br><span class="line">        path: path.join(__dirname, <span class="string">'dist'</span>, <span class="string">'[name]-manifest.json'</span>),</span><br><span class="line">        <span class="comment">// context需要和webpack.config.js保持一致</span></span><br><span class="line">        context: __dirname,</span><br><span class="line">      &#125;),</span><br><span class="line">    ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>编写完成之后，运行这个配置文件，我们的 dist 文件夹里会出现这样两个文件：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vendor-manifest.json</span><br><span class="line">vendor.js</span><br></pre></td></tr></table></figure></p>
+<p>vendor.js 不必解释，是我们第三方库打包的结果。这个多出来的 vendor-manifest.json，则用于描述每个第三方库对应的具体路径，我这里截取一部分给大家看下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"vendor_397f9e25e49947b8675d"</span>,</span><br><span class="line">  <span class="string">"content"</span>: &#123;</span><br><span class="line">    <span class="string">"./node_modules/core-js/modules/_export.js"</span>: &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"buildMeta"</span>: &#123;</span><br><span class="line">        <span class="string">"providedExports"</span>: <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"./node_modules/prop-types/index.js"</span>: &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"buildMeta"</span>: &#123;</span><br><span class="line">        <span class="string">"providedExports"</span>: <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>随后，我们只需在 webpack.config.js 里针对 dll 稍作配置：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span>,</span><br><span class="line">  <span class="comment">// 编译入口</span></span><br><span class="line">  entry: &#123;</span><br><span class="line">    main: <span class="string">'./src/index.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 目标文件</span></span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.join(__dirname, <span class="string">'dist/'</span>),</span><br><span class="line">    filename: <span class="string">'[name].js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// dll相关配置</span></span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.DllReferencePlugin(&#123;</span><br><span class="line">      context: __dirname,</span><br><span class="line">      <span class="comment">// manifest就是我们第一步中打包出来的json文件</span></span><br><span class="line">      manifest: <span class="built_in">require</span>(<span class="string">'./dist/vendor-manifest.json'</span>),</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一次基于 dll 的 webpack 构建过程优化，便大功告成了！</p>
+<p><strong>Happypack——将 loader 由单进程转为多进程</strong></p>
+<p>大家知道，webpack 是单线程的，就算此刻存在多个任务，你也只能排队一个接一个地等待处理。这是 webpack 的缺点，好在我们的 CPU 是多核的，Happypack 会充分释放 CPU 在多核并发方面的优势，帮我们把任务分解给多个子进程去并发执行，大大提升打包效率。</p>
+<p>HappyPack 的使用方法也非常简单，只需要我们把对 loader 的配置转移到 HappyPack 中去就好，我们可以手动告诉 HappyPack 我们需要多少个并发的进程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HappyPack = <span class="built_in">require</span>(<span class="string">'happypack'</span>)</span><br><span class="line"><span class="comment">// 手动创建进程池</span></span><br><span class="line"><span class="keyword">const</span> happyThreadPool =  HappyPack.ThreadPool(&#123; <span class="attr">size</span>: os.cpus().length &#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      ...</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">        <span class="comment">// 问号后面的查询参数指定了处理这类文件的HappyPack实例的名字</span></span><br><span class="line">        loader: <span class="string">'happypack/loader?id=happyBabel'</span>,</span><br><span class="line">        ...</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">      <span class="comment">// 这个HappyPack的“名字”就叫做happyBabel，和楼上的查询参数遥相呼应</span></span><br><span class="line">      id: <span class="string">'happyBabel'</span>,</span><br><span class="line">      <span class="comment">// 指定进程池</span></span><br><span class="line">      threadPool: happyThreadPool,</span><br><span class="line">      loaders: [<span class="string">'babel-loader?cacheDirectory'</span>]</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>构建结果体积压缩</strong><br><strong>文件结构可视化，找出导致体积过大的原因</strong></p>
+<p>这里为大家介绍一个非常好用的包组成可视化工具—— <a href="https://www.npmjs.com/package/webpack-bundle-analyzer" target="_blank" rel="noopener">webpack-bundle-analyzer</a>，配置方法和普通的 plugin 无异，它会以矩形树图的形式将包内各个模块的大小和依赖关系呈现出来，格局如官方所提供这张图所示：<br><img src="/2019/02/20/webpack 性能调优与 Gzip 原理/165d838010b20a4c.gif" alt="165d838010b20a4c.gif"></p>
+<p>在使用时，我们只需要将其以插件的形式引入：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> BundleAnalyzerPlugin = <span class="built_in">require</span>(<span class="string">'webpack-bundle-analyzer'</span>).BundleAnalyzerPlugin;</span><br><span class="line"> </span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> BundleAnalyzerPlugin()</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>删除冗余代码</strong><br>一个比较典型的应用，就是 Tree-Shaking。</p>
+<p>从 webpack2 开始，webpack 原生支持了 ES6 的模块系统，并基于此推出了 Tree-Shaking。webpack 官方是这样介绍它的：</p>
+<blockquote>
+<p>Tree shaking is a term commonly used in the JavaScript context for dead-code elimination, or more precisely, live-code import. It relies on ES2015 module import/export for the static structure of its module system.</p>
+</blockquote>
+<p>意思是基于 import/export 语法，Tree-Shaking 可以在编译的过程中获悉哪些模块并没有真正被使用，这些没用的代码，在最后打包的时候会被去除。</p>
+<p>举个🌰，假设我的主干文件（入口文件）是这么写的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; page1, page2 &#125; <span class="keyword">from</span> <span class="string">'./pages'</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// show是事先定义好的函数，大家理解它的功能是展示页面即可</span></span><br><span class="line">show(page1)</span><br></pre></td></tr></table></figure>
+<p>pages 文件里，我虽然导出了两个页面：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> page1 = xxx</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> page2 = xxx</span><br></pre></td></tr></table></figure>
+<p>但因为 page2 事实上并没有被用到（这个没有被用到的情况在静态分析的过程中是可以被感知出来的），所以打包的结果里会把这部分：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> page2 = xxx;</span><br></pre></td></tr></table></figure>
+<p>直接删掉，这就是 Tree-Shaking 帮我们做的事情。</p>
+<p>相信大家不难看出，Tree-Shaking 的针对性很强，它更适合用来处理模块级别的冗余代码。至于粒度更细的冗余代码的去除，往往会被整合进 JS 或 CSS 的压缩或分离过程中。</p>
+<p>这里我们以当下接受度较高的 UglifyJsPlugin 为例，看一下如何在压缩过程中对碎片化的冗余代码（如 console 语句、注释等）进行自动化删除：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> UglifyJsPlugin = <span class="built_in">require</span>(<span class="string">'uglifyjs-webpack-plugin'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line"> plugins: [</span><br><span class="line">   <span class="keyword">new</span> UglifyJsPlugin(&#123;</span><br><span class="line">     <span class="comment">// 允许并发</span></span><br><span class="line">     parallel: <span class="literal">true</span>,</span><br><span class="line">     <span class="comment">// 开启缓存</span></span><br><span class="line">     cache: <span class="literal">true</span>,</span><br><span class="line">     compress: &#123;</span><br><span class="line">       <span class="comment">// 删除所有的console语句    </span></span><br><span class="line">       drop_console: <span class="literal">true</span>,</span><br><span class="line">       <span class="comment">// 把使用多次的静态值自动定义为变量</span></span><br><span class="line">       reduce_vars: <span class="literal">true</span>,</span><br><span class="line">     &#125;,</span><br><span class="line">     output: &#123;</span><br><span class="line">       <span class="comment">// 不保留注释</span></span><br><span class="line">       comment: <span class="literal">false</span>,</span><br><span class="line">       <span class="comment">// 使输出的代码尽可能紧凑</span></span><br><span class="line">       beautify: <span class="literal">false</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;)</span><br><span class="line"> ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>按需加载</strong><br>大家想象这样一个场景。我现在用 React 构建一个单页应用，用 React-Router 来控制路由，十个路由对应了十个页面，这十个页面都不简单。如果我把这整个项目打一个包，用户打开我的网站时，会发生什么？有很大机率会卡死，对不对？更好的做法肯定是先给用户展示主页，其它页面等请求到了再加载。当然这个情况也比较极端，但却能很好地引出按需加载的思想：</p>
+<ul>
+<li><p>一次不加载完所有的文件内容，只加载此刻需要用到的那部分（会提前做拆分）</p>
+</li>
+<li><p>当需要更多内容时，再对用到的内容进行即时加载<br>好，既然说到这十个 Router 了，我们就拿其中一个开刀，假设我这个 Router 对应的组件叫做 BugComponent，来看看我们如何利用 webpack 做到该组件的按需加载。</p>
+</li>
+</ul>
+<p>当我们不需要按需加载的时候，我们的代码是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> BugComponent <span class="keyword">from</span> <span class="string">'../pages/BugComponent'</span></span><br><span class="line">...</span><br><span class="line">&lt;Route path=<span class="string">"/bug"</span> component=&#123;BugComponent&#125;&gt;</span><br></pre></td></tr></table></figure>
+<p>为了开启按需加载，我们要稍作改动。</p>
+<p>首先 webpack 的配置文件要走起来：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">    path: path.join(__dirname, <span class="string">'/../dist'</span>),</span><br><span class="line">    filename: <span class="string">'app.js'</span>,</span><br><span class="line">    publicPath: defaultSettings.publicPath,</span><br><span class="line">    <span class="comment">// 指定 chunkFilename</span></span><br><span class="line">    chunkFilename: <span class="string">'[name].[chunkhash:5].chunk.js'</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>路由处的代码也要做一下配合：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getComponent =&gt; (location, cb) &#123;</span><br><span class="line">  <span class="built_in">require</span>.ensure([], (<span class="built_in">require</span>) =&gt; &#123;</span><br><span class="line">    cb(<span class="literal">null</span>, <span class="built_in">require</span>(<span class="string">'../pages/BugComponent'</span>).default)</span><br><span class="line">  &#125;, <span class="string">'bug'</span>)</span><br><span class="line">&#125;,</span><br><span class="line">...</span><br><span class="line">&lt;Route path=<span class="string">"/bug"</span> getComponent=&#123;getComponent&#125;&gt;</span><br></pre></td></tr></table></figure>
+<p>对，核心就是这个方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>.ensure(dependencies, callback, chunkName)</span><br></pre></td></tr></table></figure>
+<p>这是一个异步的方法，webpack 在打包时，BugComponent 会被单独打成一个文件，只有在我们跳转 bug 这个路由的时候，这个异步方法的回调才会生效，才会真正地去获取 BugComponent 的内容。这就是按需加载。</p>
+<p>按需加载的粒度，还可以继续细化，细化到更小的组件、细化到某个功能点，都是 ok 的。</p>
+<p>等等，这和说好的不一样啊？不是说 Code-Splitting 才是 React-Router 的按需加载实践吗？</p>
+<p>没错，在 React-Router4 中，我们确实是用 Code-Splitting 替换掉了楼上这个操作。而且如果有使用过 React-Router4 实现过路由级别的按需加载的同学，可能会对 React-Router4 里用到的一个叫“Bundle-Loader”的东西印象深刻。我想很多同学读到按需加载这里，心里的预期或许都是时下大热的 Code-Splitting，而非我呈现出来的这段看似“陈旧”的代码。</p>
+<p>但是，如果大家稍微留个心眼，去看一下 Bundle Loader 并不长的源代码的话，你会发现它竟然还是使用 require.ensure 来实现的——这也是我要把 require.ensure 单独拎出来的重要原因。所谓按需加载，根本上就是在正确的时机去触发相应的回调。理解了这个 require.ensure 的玩法，大家甚至可以结合业务自己去修改一个按需加载模块来用。</p>
+<h3 id="Gzip-压缩原理"><a href="#Gzip-压缩原理" class="headerlink" title="Gzip 压缩原理"></a>Gzip 压缩原理</h3><p>前面说了不少 webpack 的故事，目的还是帮大家更好地实现压缩和合并。说到压缩，可不只是构建工具的专利。我们日常开发中，其实还有一个便宜又好用的压缩操作：开启 Gzip。</p>
+<p>具体的做法非常简单，只需要你在你的 request headers 中加上这么一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accept-encoding:gzip</span><br></pre></td></tr></table></figure>
+<p><strong>HTTP 压缩</strong></p>
+<blockquote>
+<p>HTTP 压缩是一种内置到网页服务器和网页客户端中以改进传输速度和带宽利用率的方式。在使用 HTTP 压缩的情况下，HTTP 数据在从服务器发送前就已压缩：兼容的浏览器将在下载所需的格式前宣告支持何种方法给服务器；不支持压缩方法的浏览器将下载未经压缩的数据。最常见的压缩方案包括 Gzip 和 Deflate。</p>
+</blockquote>
+<p>以上是摘自百科的解释，事实上，大家可以这么理解：</p>
+<p><strong>HTTP 压缩就是以缩小体积为目的，对 HTTP 内容进行重新编码的过程</strong><br>Gzip 的内核就是 Deflate，目前我们压缩文件用得最多的就是 Gzip。可以说，Gzip 就是 HTTP 压缩的经典例题。</p>
+<p><strong>该不该用 Gzip</strong><br>如果你的项目不是极端迷你的超小型文件，我都建议你试试 Gzip。</p>
+<p>压缩 Gzip，服务端要花时间；解压 Gzip，浏览器要花时间。中间节省出来的传输时间，真的那么可观吗？</p>
+<p>答案是肯定的。如果你手上的项目是 1k、2k 的小文件，那确实有点高射炮打蚊子的意思，不值当。但更多的时候，我们处理的都是具备一定规模的项目文件。实践证明，这种情况下压缩和解压带来的时间开销相对于传输过程中节省下的时间开销来说，可以说是微不足道的。</p>
+<p>首先要承认 Gzip 是高效的，压缩后通常能帮我们减少响应 70% 左右的大小。</p>
+<p>但它并非万能。Gzip 并不保证针对每一个文件的压缩都会使其变小。</p>
+<p>Gzip 压缩背后的原理，是在一个文本文件中找出一些重复出现的字符串、临时替换它们，从而使整个文件变小。根据这个原理，文件中代码的重复率越高，那么压缩的效率就越高，使用 Gzip 的收益也就越大。反之亦然。</p>
+<p><strong>webpack 的 Gzip 和服务端的 Gzip</strong></p>
+<p>一般来说，Gzip 压缩是服务器的活儿：服务器了解到我们这边有一个 Gzip 压缩的需求，它会启动自己的 CPU 去为我们完成这个任务。而压缩文件这个过程本身是需要耗费时间的，大家可以理解为我们以服务器压缩的时间开销和 CPU 开销（以及浏览器解析压缩文件的开销）为代价，省下了一些传输过程中的时间开销。</p>
+<p>既然存在着这样的交换，那么就要求我们学会权衡。服务器的 CPU 性能不是无限的，如果存在大量的压缩需求，服务器也扛不住的。服务器一旦因此慢下来了，用户还是要等。Webpack 中 Gzip 压缩操作的存在，事实上就是为了在构建过程中去做一部分服务器的工作，为服务器分压。</p>
+<p>因此，这两个地方的 Gzip 压缩，谁也不能替代谁。它们必须和平共处，好好合作。作为开发者，我们也应该结合业务压力的实际强度情况，去做好这其中的权衡。</p>
+
       
 
       
